@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 5 of /Users/danchurova/Documents/PROJECTS/Pervouchine_lab/NMD_project/cross_regulation_pipeline/Snakefile:
+Missing input files for rule reactive_exons:
+data/input_data/shRNA/B07/sample.tsv
