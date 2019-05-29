@@ -20,15 +20,15 @@ function annotate() {
 function find_cross_targets() {
 
 	factor=$1 # SRSF7 or U2AF1 or all
-	window=$2 # 500 {+-number of nucleotides} or what you consider appropriate
-	eCLIP_threshold=$3 # 1 or 2
-	q_val_threshold=$4 # typically 1.3 or 1
+	p_val_threshold=$2 # p-value threshold for KD of RBPs and NMD KD (typically 1.3 or 1)
+	window=$3 # 500 {+-number of nucleotides} around exons where we are looking for peaks (or what you consider appropriate)
+	eCLIP_threshold=$4 # threshold for p-value and logFC of eCLIPS (1 or 2)
 
 
 	# RBPs KD shRNA to reactive exons
 	# KD      cell    id      name    deltaPSI        deltaPSIc       z       p       q       KDFC
-	# filter by q-value - consider delta PSI (5th and 6th colums)
-	awk '$1!=$4' data/input_data/shRNA/B07/*.tsv | grep chr | awk "{ if (\$9 >= $q_val_threshold) { print } }" > data/outputs/reactive_exons.bed
+	# filter by not by q-value but by P-VALUE  - consider delta PSI (5th and 6th colums)
+	awk '$1!=$4' data/input_data/shRNA/B07/*.tsv | grep chr | awk "{ if (\$8 >= $p_val_threshold) { print } }" > data/outputs/reactive_exons.bed
 	awk '$5>0' data/outputs/reactive_exons.bed > data/outputs/reactive_exons_incr.bed
 	awk '$5<0' data/outputs/reactive_exons.bed > data/outputs/reactive_exons_decr.bed
 
