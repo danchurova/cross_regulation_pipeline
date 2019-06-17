@@ -39,9 +39,9 @@ function find_cross_targets() {
 	awk -v OFS='\t' "{split(\$4,a,\"_\");if(\$7>=$eCLIP_threshold && \$8>=$eCLIP_threshold) print \$1, \$2, \$3, a[1], \$5, \$6, a[2], a[3], \$7, \$8}" data/input_data/raw_eCLIPs_all.bed | sort -u -k1,1 -k2,2n > data/outputs/significant_peaks.bed
 	awk -v s=$window '{print $1,$3-s, $4+s, $2,1,$5,$6}' OFS='\t' data/py_anno_files/exon_gene.tsv | bedtools intersect -a stdin -b data/outputs/significant_peaks.bed  -wa -wb -s > data/outputs/exon_peaks.bed
 	awk -v OFS='\t' '{if($7!=$11) print $8, $9, $10, $11, $12, $13, $1, $2, $3, $4, $5, $6, $7}' data/outputs/exon_peaks.bed > data/outputs/new_cross_peaks.bed
-	python3 filter_cross_regulators.py data/outputs/new_cross_peaks.bed  data/outputs/reactive_exons.bed > data/outputs/filtered_new_cross_peaks.tsv
+	python3 filter_cross_regulators2.py data/outputs/reactive_exons.bed data/outputs/new_cross_peaks.bed  > data/outputs/filtered_new_cross_peaks.tsv
 	python3 filter_by_nmd.py data/input_data/upf1xrn1_deltaPSI.tsv data/outputs/filtered_new_cross_peaks.tsv  > data/outputs/new_cross_peaks_nmd.tsv
-	awk -v k="$factor" "{if (\$1 == k) { print } }" OFS='\t' data/outputs/new_cross_peaks_nmd.tsv
+	awk -v k="$factor" "{if (\$4 == k) { print } }" OFS='\t' data/outputs/new_cross_peaks_nmd.tsv > data/outputs/new_cross_peaks_nmd_$factor.tsv
 
 
 	# distances between peak and exon? CHECK and change
@@ -66,6 +66,5 @@ function find_cross_targets() {
 # find_cross_targets {factor} {window} {eCLIP_threshold} {q_val_threshold}
 
 annotate data/input_data/gencode.v19.annotation.gtf
-find_cross_targets SRSF7 500 1 1 > data/outputs/cross_peaks_nmd_SRSF7_500_11.tsv
-find_cross_targets SRSF7 500 1 1.3 > data/outputs/cross_peaks_nmd_SRSF7_500_11p3.tsv
+find_cross_targets SRSF7 1 500 1 > data/outputs/cross_peaks_nmd_SRSF7_500_11.tsv
 
