@@ -1,1 +1,7 @@
 data/
+gcn/
+data-postprocessing/
+exon_psi_KD/
+id_gene_name_list.txt
+merged_eCLIP_targets.tsv
+track_sorted.bed
